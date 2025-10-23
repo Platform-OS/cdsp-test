@@ -1,7 +1,5 @@
 # Launch Your Playwright Codespace
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Platform-OS/cdsp-test)
-
 ## Important
 
 Fork this repository to your **personal account** first. Running a Codespace on your fork uses your **free** personal quota (not the organization’s billing).
