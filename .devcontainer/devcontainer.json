@@ -1,6 +1,27 @@
 {
   "name": "Playwright Workshop",
   "image": "platformos/playwright:5.5.0-1.56.0",
+  "containerEnv": {
+    "TEST_APP_URL": "https://fk-test-ci-instance-01.ps-01-platformos.com/"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+	"ms-playwright.playwright",
+	"dbaeumer.vscode-eslint",
+	"esbenp.prettier-vscode"
+      ],
+      "settings": {
+	"github.copilot.enable": false,
+	"github.copilot-chat.enable": false,
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"workbench.startupEditor": "none",
+	"workbench.activityBar.visible": true,
+	"workbench.sideBar.location": "left",
+      }
+    }
+  },
   "postCreateCommand": "bash -lc 'G=$(npm root -g); mkdir -p node_modules/@playwright; ln -sfn \"$G/@playwright/test\" node_modules/@playwright/test; echo Ready'",
   "forwardPorts": [9323, 9339],
   "portsAttributes": {
