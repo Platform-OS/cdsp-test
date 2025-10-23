@@ -1,0 +1,10 @@
+{
+  "name": "Playwright Workshop",
+  "image": "platformos/playwright:5.5.0-1.56.0",
+  "postCreateCommand": "corepack enable || true && (pnpm -v >/dev/null 2>&1 && pnpm i || npm ci)",
+  "forwardPorts": [9323, 9339],
+  "portsAttributes": {
+    "9323": { "label": "Playwright HTML report", "onAutoForward": "notify" },
+    "9339": { "label": "Playwright UI mode", "onAutoForward": "notify" }
+  }
+}
