@@ -9,6 +9,6 @@
     "codegen": "playwright codegen $TEST_APP_URL"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.0",
-  },
+    "@playwright/test": "^1.56.0"
+  }
 }
