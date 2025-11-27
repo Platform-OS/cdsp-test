@@ -7,5 +7,8 @@
     "ui": "playwright test --ui --ui-host 0.0.0.0 --ui-port 9339",
     "report": "playwright show-report --host 0.0.0.0 --port 9323",
     "codegen": "playwright codegen $TEST_APP_URL"
-  }
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+  },
 }
