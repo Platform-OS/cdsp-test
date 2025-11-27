@@ -35,7 +35,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: Platform-OS/gh-action-run-pw-test@0.0.8
-        name: Run Playwright tests
-        with:
-          test-name: test
+      - name: Run Playwright tests
+        run: npm run test
