@@ -1,7 +1,6 @@
 {
   "name": "playwright-workshop",
   "private": true,
-  "type": "module",
   "scripts": {
     "test": "playwright test",
     "ui": "playwright test --ui --ui-host 0.0.0.0 --ui-port 9339",
