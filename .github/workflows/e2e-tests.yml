@@ -1,34 +1,88 @@
+# ------------------------------------------------------------
+# Workflow Name
+# ------------------------------------------------------------
+# This workflow runs Playwright E2E tests.
+# It demonstrates how CI can test an already deployed application.
 name: Playwright E2E tests
+
+# ------------------------------------------------------------
+# Workflow Triggers
+# ------------------------------------------------------------
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main ]     # Run on PRs targeting main
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ main ]     # Run on pushes to main
+  workflow_dispatch:        # Allow manual trigger
 
+# ------------------------------------------------------------
+# Jobs
+# ------------------------------------------------------------
 jobs:
+  # ----------------------------------------------------------
+  # Pre-job: Skip duplicate runs
+  # ----------------------------------------------------------
+  # This job prevents running the workflow unnecessarily on
+  # duplicate commits or situations where only ignored files
+  # (like README.md) changed.
   pre_job:
     runs-on: ubuntu-latest
     outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      should_skip: ${{ steps.skip_check.outputs.should_skip }} # Pass skip flag to next jobs
     steps:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@master
         with:
-          github_token: ${{ github.token }}
-          paths_ignore: '["**/README.md"]'
-          do_not_skip: '["push"]'
+          github_token: ${{ github.token }}                       # Used to check commit metadata
+          paths_ignore: '["**/README.md"]'                       # Ignore docs-only changes
+          do_not_skip: '["push"]'                                # Always run for pushes to main
 
+  # ----------------------------------------------------------
+  # (Example Only) Build & Deploy Job — commented out
+  # ----------------------------------------------------------
+  # This block demonstrates where your application build AND deployment
+  # would normally happen in a full CI/CD workflow.
+  # It is intentionally commented out because your demo runs tests
+  # against an already deployed environment.
+  #
+  # build-and-deploy:
+  #   needs: pre_job
+  #   if: needs.pre_job.outputs.should_skip != 'true'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Install dependencies
+  #       run: npm install
+  #
+  #     - name: Build application
+  #       run: npm run build
+  #
+  #     - name: Deploy application
+  #       run: |
+  #         echo "Deploying the app..."
+  #         # deployment command goes here
+  #         # e.g., serverless deploy, firebase deploy, kubectl apply, etc.
+  #
+  #   # The test job would normally depend on this:
+  #   # needs: build-and-deploy
+
+  # ----------------------------------------------------------
+  # Run E2E Tests Job
+  # ----------------------------------------------------------
+  # This job runs Playwright end-to-end tests against a deployed app.
   run-e2e-tests:
     needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'   # Skip if pre_job determines it's a duplicate run
     runs-on: ubuntu-latest
-    container: platformos/playwright:5.5.0-1.56.0
+    container: platformos/playwright:5.5.0-1.56.0     # Use container with Playwright preinstalled
     env:
-      CI: true
-      TEST_APP_URL: https://fk-test-ci-instance-01.ps-01-platformos.com/
-      NPM_CONFIG_CACHE: ${{ github.workspace }}/.npm
+      CI: true                                        # Required by Playwright for CI mode
+      TEST_APP_URL: https://fk-test-ci-instance-01.ps-01-platformos.com/   # Deployed app under test
+      NPM_CONFIG_CACHE: ${{ github.workspace }}/.npm # Cache location for npm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4                     # Check out repository code
       
       - name: Run Playwright tests
-        run: npm run test
+        run: npm run test                              # Run E2E tests
